@@ -7,6 +7,7 @@ const helmet = require('helmet');
 const mongoSantize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const compression= require('compression')
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/errorController');
@@ -68,6 +69,7 @@ app.use(
 // serveing static files
 app.use(express.static('./public'));
 
+app.use(compression())
 // Test middelware
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
