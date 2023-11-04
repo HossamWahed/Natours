@@ -6,8 +6,6 @@ const APIFeatures = require('../utils/APIFeatures');
 const catchAsync = require('../utils/catchAsync');
 const Factory = require('./handlerFactor');
 const AppError = require('../utils/appError');
-const strip = require('strip');
-
 
 exports.getCheckoutSession = catchAsync(  async(req ,res ,next) => {
     // 1) Get the currently booked tour 
@@ -69,7 +67,7 @@ exports.webhooksCheckout = ( req , res , next ) => {
   const signature = req.headers['stripe-signature'];
   let event;
   try {
-     event = strip.webhooks.constructEvent(
+     event = stripe.webhooks.constructEvent(
       req.body,'signature',
       signature,
       process.env.STRIPE_WEBHOOK_SECRET
