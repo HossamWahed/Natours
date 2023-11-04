@@ -8,6 +8,7 @@ const mongoSantize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const compression= require('compression')
+const cors= require('cors')
 
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/errorController');
@@ -15,12 +16,28 @@ const tourRouters = require('./route/tourRouters.js');
 const userRouters = require('./route/userRouters.js');
 const reviewRouters = require('./route/reviewRouter.js');
 const bookingRouters = require('./route/BookingRouter.js');
+const bookingControllers = require('./controller/bookingController');
 
 const Tour = require('./Models/tourModel');
+const APIFeatures = require('./utils/APIFeatures');
 
 const app = express();
 
+// app.enable('trust proxy')
+
 // 1) global middleware
+
+// implement cors
+app.use(cors())
+// Accsess control allow orgin
+
+// api.natours.com , front-end natours.com
+// app.use(cors({
+//   origin: 'https://www.natours.com'
+// }))
+
+app.options('*' , cors()) 
+// app.options('/api/v1/tours/:id' , cors()) 
 
 // Set security HTTP header
 app.use(helmet());
@@ -42,6 +59,8 @@ app.use('/api', limiter);
 // app.use(busboyBodyParser({
 //   limit: '50mb',
 // }));
+
+app.post('/webhook-checkout' ,express.raw({type: 'application/json'}) ,bookingControllers.webhooksCheckout)
 
 // Body parser, reading data from body into req.body
 app.use(express.json({ limit: '10kb' }));
@@ -83,15 +102,11 @@ app.use('/api/v1/reviews',reviewRouters);
 app.use('/api/v1/bookings',bookingRouters);
 
 
-
-
-
-
 app.all('*', (req, res, next) => {
   next(new AppError(`can't find ${req.originalUrl} on this serve!`,404));
 });
 
 app.use(globalErrorHandler);
 
-  
+   
 module.exports = app;
