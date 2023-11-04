@@ -32,7 +32,7 @@ Router.route('/distances/:latlng/unit/:unit').get(
 );
 
 Router.route('/')
-  .get(bookingController.createBookingCheckout, tourController.GetAllTour)
+  .get(tourController.GetAllTour)
   .post(
     authController.protect,
     authController.restrictTo('admin', 'lead-guide'),
