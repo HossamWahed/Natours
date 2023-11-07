@@ -4,8 +4,7 @@
   "description": "learning node , express and mongoDb",
   "main": "app.js",
   "scripts": {
-    "start": "node server.js",
-    "start:prod": "SET NODE_ENV=production && nodemon server.js",
+    "start": "nodemon server.js",
     "debug": "ndb server.js"
   },
   "author": "hossam wahed",
