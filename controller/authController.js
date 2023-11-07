@@ -13,7 +13,7 @@ const signToken = (id) =>
   Jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRE_IN,
   });
-
+// 
 
 const createSendToken = (user, statusCode,req ,res) => {
   const token = signToken(user._id);
