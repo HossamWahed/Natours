@@ -48,9 +48,5 @@
     "eslint-plugin-react": "^7.31.10",
     "ndb": "^1.1.5",
     "prettier": "^2.7.1"
-  },
-  "engines": {
-    "node": "14.17.0"
-  }
-  
+  } 
 }
