@@ -85,7 +85,6 @@ exports.webhooksCheckout = ( req , res , next ) => {
   }
 
   res.status(200).json({received : true})
-  next()
 }
 
 exports.GetAllBookings = Factory.getAll(Booking);
