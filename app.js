@@ -25,7 +25,7 @@ const APIFeatures = require('./utils/APIFeatures');
 
 const app = express();
 
-app.enable('trust proxy')
+app.set('trust proxy',1)
 
 // 1) global middleware
 
@@ -55,7 +55,16 @@ if (process.env.NODE_ENV === 'development') {
 //   windowMs: 60 * 60 * 1000,
 //   message: 'Too many requests from this IP, please try again in an hour!',
 // });
-// app.use('/api', limiter);
+// app.use('/api', limiter);\
+
+// Setup rate limiting middleware
+const limiter = ratelimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+
+// Apply the rate limiter to all requests
+app.use(limiter);
 
 // Parse form data using busboy-body-parser
 // app.use(busboyBodyParser({
