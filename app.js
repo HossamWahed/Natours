@@ -25,7 +25,7 @@ const APIFeatures = require('./utils/APIFeatures');
 
 const app = express();
 
-// app.enable('trust proxy')
+app.enable('trust proxy')
 
 // 1) global middleware
 
