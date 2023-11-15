@@ -65,7 +65,7 @@ app.use('/api', limiter);
 app.post('/webhook-checkout' , express.raw({type: 'application/json'}) ,bookingControllers.webhooksCheckout)
 
 // Body parser, reading data from body into req.body
-app.use(express.json({ limit: '10kb' }));
+app.use(express.json());
 
 // Data santization against NOSQL query injection
 app.use(mongoSantize());
