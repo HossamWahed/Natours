@@ -11,7 +11,6 @@ const compression= require('compression')
 const cors= require('cors')
 // const bodyParse= require('body-parser')
 
-
 const AppError = require('./utils/appError');
 const globalErrorHandler = require('./controller/errorController');
 const tourRouters = require('./route/tourRouters.js');
@@ -50,26 +49,17 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Limit request from same API
-// const limiter = ratelimit({
-//   max: 100,
-//   windowMs: 60 * 60 * 1000,
-//   message: 'Too many requests from this IP, please try again in an hour!',
-// });
-// app.use('/api', limiter);\
-
-// Setup rate limiting middleware
 const limiter = ratelimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from this IP, please try again in an hour!',
 });
-
-// Apply the rate limiter to all requests
-app.use(limiter);
+app.use (limiter);
 
 // Parse form data using busboy-body-parser
-// app.use(busboyBodyParser({
-//   limit: '50mb',
-// }));
+app.use(busboyBodyParser({
+  limit: '50mb',
+}));
 
 app.post('/webhook-checkout' , express.raw({type: 'application/json'}) ,bookingControllers.webhooksCheckout)
 
