@@ -5,6 +5,7 @@ const APIFeatures = require('../utils/APIFeatures');
 const catchAsync = require('../utils/catchAsync');
 const Factory = require('./handlerFactor');
 const AppError = require('../utils/appError');
+const { promises } = require('nodemailer/lib/xoauth2');
 
 
 const multerStorge = multer.memoryStorage();
@@ -30,9 +31,9 @@ exports.uploadTourPhoto = upload.fields([
   {name: 'images' , maxCount : 3 } 
 ]);
 
-exports.resizeTourPhoto = catchAsync( async(req , file , next) => {
+exports.resizeTourPhoto = catchAsync( async(req , res, next) => {
 
-  if(!req.files.imageCover ) return next ();
+  if(!req.files.imageCover || !req.files.images ) return next ();
 
   // 1) image cover
   req.body.imageCover  = `tours-${req.params.id}-${Date.now()}-cover.jpeg`;
@@ -54,7 +55,6 @@ exports.resizeTourPhoto = catchAsync( async(req , file , next) => {
       .toFormat('jpeg')
       .jpeg({quality : 90 })
       .toFile (`public/img/tours/${filename}`)
-      // req.body.imageCover = imageCoverFilename; 
 
       req.body.images.push(filename)
     })

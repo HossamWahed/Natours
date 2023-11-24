@@ -1,6 +1,5 @@
 const fs = require('fs');
 const express = require('express');
-const busboyBodyParser = require('busboy-body-parser');
 const morgan = require('morgan');
 const ratelimit = require('express-rate-limit');
 const helmet = require('helmet');
@@ -56,10 +55,6 @@ const limiter = ratelimit({
 });
 app.use (limiter);
 
-// Parse form data using busboy-body-parser
-app.use(busboyBodyParser({
-  limit: '50mb',
-}));
 
 app.post('/webhook-checkout' , express.raw({type: 'application/json'}) ,bookingControllers.webhooksCheckout)
 
