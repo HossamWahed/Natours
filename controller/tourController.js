@@ -7,9 +7,7 @@ const Factory = require('./handlerFactor');
 const AppError = require('../utils/appError');
 const { promises } = require('nodemailer/lib/xoauth2');
 
-
 const multerStorge = multer.memoryStorage();
-
 
 const multerfilter = (req,file,cb) => {
   if (file.mimetype.startsWith('image')){
@@ -19,12 +17,10 @@ const multerfilter = (req,file,cb) => {
   }
 } 
 
-
 const upload = multer({
   storage : multerStorge ,
   fileFilter : multerfilter
  })
-
 
 exports.uploadTourPhoto = upload.fields([
   {name: 'imageCover' , maxCount : 1 } ,
@@ -32,33 +28,39 @@ exports.uploadTourPhoto = upload.fields([
 ]);
 
 exports.resizeTourPhoto = catchAsync( async(req , res, next) => {
-
-  if(!req.files.imageCover || !req.files.images ) return next ();
+console.log(req.files)
+  // if( !req.files.images || !req.files.imageCover ) return next ();
 
   // 1) image cover
-  req.body.imageCover  = `tours-${req.params.id}-${Date.now()}-cover.jpeg`;
-  await sharp(req.files.imageCover[0].buffer)
-  .resize(2000,1333)
-  .toFormat('jpeg')
-  .jpeg({quality : 90 })
-  .toFile (`public/img/tours/${req.body.imageCover}`)
-  // req.body.imageCover = imageCoverFilename; 
+  if( req.files.imageCover ) {
+    req.body.imageCover  = `tours-${req.params.id}-${Date.now()}-cover.jpeg`;
+    await sharp(req.files.imageCover[0].buffer)
+    .resize(2000,1333)
+    .toFormat('jpeg')
+    .jpeg({quality : 90 })
+    .toFile (`public/img/tours/${req.body.imageCover}`)
+    // req.body.imageCover = imageCoverFilename; 
+  }
 
-    // 2) images
-    req.body.images  = [];
-
-    await Promise.all(
-    req.files.images.map(async (file , i) => {
-     const filename = `tours-${req.params.id}-${Date.now()}-${i+1}.jpeg`
-      await sharp(file.buffer)
-      .resize(2000,1333)
-      .toFormat('jpeg')
-      .jpeg({quality : 90 })
-      .toFile (`public/img/tours/${filename}`)
-
-      req.body.images.push(filename)
-    })
-  );
+ // 2) images
+    if( req.files.images ) {
+      req.body.images  = [];
+  
+      await Promise.all(
+      req.files.images.map(async (file , i) => {
+        console.log(file.buffer)
+       const filename = `tours-${req.params.id}-${Date.now()}-${i+1}.jpeg`
+        await sharp(file.buffer)
+        .resize(2000,1333)
+        .toFormat('jpeg')
+        .jpeg({quality : 90 })
+        .toFile (`public/img/tours/${filename}`)
+  
+        req.body.images.push(filename)
+      })
+    );
+    console.log(req.body.images)
+    }
   next()
 })
 
